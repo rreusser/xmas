@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+html, body {
+  height: 100%;
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(
+    0deg, rgba(255,0,0,1) 0%,
+    rgba(255,255,255,1) 100%
+  );
+
+}
+
+body {
+  background: rgba(120, 180, 255, 0.5);
+}
+
+#bingo {
+  position: relative;
+  z-index: 1;
+  margin: 2em;
+  margin-bottom: 1em;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.5);
+  height: 640px;
+  border-spacing: 0;
+  border-collapse: collapse;
+  width: 640px;
+  height: 640px;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#bingo td {
+  width: 20%;
+  height: 20%;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid white;
+  color: #333;
+}
+
+#title {
+  text-align: center;
+  height: 80px;
+  width: 100%;
+}
+
+#title h1 {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  margin: auto;
+  font-size: 100px;
+}
+
+#bingo tr:nth-child(even) td:nth-child(even) {
+  background-color: rgb(255, 255, 255, 0.5);
+}
+#bingo tr:nth-child(odd) td:nth-child(odd) {
+  background-color:rgb(255, 255, 255, 0.5);
+}
+
+#bingo td {
+  cursor: pointer;
+}
+
+#bingo .hit {
+  background-color: #d33 !important;
+  color: white;
+}
+
+#title h1:first-child {
+  z-index: 1;
+  background-color: red;
+
+  /* Create the gradient. */
+  background: repeating-linear-gradient(
+    -45deg,
+    #f33,
+    #f33 20px,
+    #eee 20px,
+    #eee 40px
+  );
+
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent;
+}
+
+#title h1:last-child {
+  text-shadow:
+    1px 0 0px #333,
+    -1px 0 0px #333,
+    0 1px 0px #333,
+    0 -1px 0px #333,
+    0 0 10px #000;
+}
+
+#grinch {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+}
+#max {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 250px;
+}

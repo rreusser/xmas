@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+<head>
+<title>The Grinch Bingo</title>
+
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/print.css" media="print">
+<script src="confetti.browser.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+
+<img src="images/grinch.png" id="grinch">
+<img src="images/max.png" id="max">
+
+<div id="title">
+  <h1>BINGO</h1>
+  <h1>BINGO</h1>
+</div>
+
+<table id="bingo">
+  <tbody>
+  </tbody>
+</table>
+
+<script type="text/javascript">
+function SeedRandom(state1,state2){
+  var mod1=4294967087
+  var mul1=65539
+  var mod2=4294965887
+  var mul2=65537
+  if(typeof state1!="number"){
+    state1=+new Date()
+  }
+  if(typeof state2!="number"){
+      state2=state1
+  }
+  state1=state1%(mod1-1)+1
+  state2=state2%(mod2-1)+1
+  function random(limit){
+    state1=(state1*mul1)%mod1
+    state2=(state2*mul2)%mod2
+    if(state1<limit && state2<limit && state1<mod1%limit && state2<mod2%limit){
+      return random(limit)
+    }
+    return (state1+state2)%limit
+  }
+  return random
+}
+
+var seed = window.location.hash;
+if (seed === '') {
+  seed = Math.floor(1000 * Math.random());
+  window.location.hash = seed;
+} else {
+  seed = parseInt(window.location.hash.replace(/^#/, ''));
+}
+
+function shuffleArray(array) {
+  var rng = SeedRandom(seed);
+  var random = () => rng(1e6) / 1e6;
+  for (var i = array.length - 1; i > 0; i--) {
+    var r = random();
+    var j = Math.floor(r * (i + 1));
+    var temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
+}
+
+var prevWin = false;
+function checkForWin () {
+  var win;
+  function doit () {
+    if (!prevWin) {
+      confetti({
+        particleCount: 150,
+        colors: [
+          '#e33',
+          '#fff',
+          '#3f3',
+        ]
+      });
+      var cnt = 0;
+      var i = setInterval(() => {
+        confetti({
+          particleCount: 150,
+          colors: [
+            '#e33',
+            '#fff',
+            '#3f3',
+          ]
+        });
+        if (++cnt === 3) clearInterval(i);
+      }, 1000);
+    }
+    prevWin = true;
+  }
+  for (var i = 0; i < N; i++) {
+    var rowWin = true;
+    var colWin = true;
+    for (var j = 0; j < N; j++) {
+      rowWin = rowWin && squares[i][j].classList.contains('hit');
+      colWin = colWin && squares[j][i].classList.contains('hit');
+    }
+    if (rowWin || colWin) return doit();
+  }
+  var win1 = true;
+  var win2 = true;
+  for (var i = 0; i < N; i++) {
+    win1 = win1 && squares[i][i].classList.contains('hit');
+    win2 = win2 && squares[N - 1 - i][i].classList.contains('hit');
+  }
+  if (win1 || win2) return doit();
+  prevWin = false;
+}
+
+var N = 5;
+var squares = [];
+
+function fillTable (tbody, entries) {
+  for (var i = 0; i < N; i++) {
+    var sqs = [];
+    var row = document.createElement('tr');
+    for (var j = 0; j < N; j++) {
+      var div = document.createElement('td');
+      sqs.push(div);
+      var idx = i + N * j;
+      row.appendChild(div);
+      div.textContent = entries[idx];
+    }
+    squares.push(sqs);
+    tbody.appendChild(row);
+  }
+
+}
+
+var bingo = document.querySelector('#bingo tbody');
+
+fetch("./data/grinch.json")
+  .then(resp => resp.json())
+  .then(data => shuffleArray(data))
+  .then(data => fillTable(bingo, data))
+  .then(() => {
+    var sqs = document.querySelectorAll('td');
+    sqs.forEach(sq => sq.addEventListener('click', function () {
+      if (!sq.classList.contains('hit')) {
+        sq.classList.add('hit');
+      } else {
+        sq.classList.remove('hit');
+      }
+      requestAnimationFrame(checkForWin);
+    }));
+  });
+</script>
+
+
+</body>
+</html>
